@@ -17,7 +17,7 @@ sudo pacman -S alsa-utils alsa-tools --needed
 # sudo pacman -S pipewire pipewire-jack pipewire-alsa pipewire-pulse --needed
 
 # bluetooth
-sudo pacman -S bluez bluez-utils blueberry --needed && sudo systemctl enable bluetooth
+sudo pacman -S bluez bluez-utils blueman --needed && sudo systemctl enable bluetooth
 
 # delete packages from gnome de
 # sudo pacman -Rsn totem sushi simple-scan nano gnome-weather gnome-photos gnome-maps gnome-contacts gnome-clocks gnome-calendar gnome-boxes gnome-books eog epiphany cheese --needed
