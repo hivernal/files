@@ -1,29 +1,3 @@
-# Copyright (c) 2010 Aldo Cortesi
-# Copyright (c) 2010, 2014 dequis
-# Copyright (c) 2012 Randall Ma
-# Copyright (c) 2012-2014 Tycho Andersen
-# Copyright (c) 2012 Craig Barnes
-# Copyright (c) 2013 horsik
-# Copyright (c) 2013 Tao Sauvage
-#
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in
-# all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-# SOFTWARE.
-
 from libqtile import bar, layout, extension
 from libqtile.config import Click, Drag, Group, Key, KeyChord, Match, Screen
 from libqtile.lazy import lazy
@@ -33,84 +7,84 @@ import subprocess
 
 from libqtile import hook
 
+
 @hook.subscribe.startup_once
 def autostart():
-    home = os.path.expanduser('~/.config/polybar/simple/launch.sh')
+    home = os.path.expanduser('~/.config/qtile/autostart.sh')
     subprocess.run([home])
 
 
 mod = "mod4"
 
 keys = [
-    # A list of available commands that can be bound to keys can be found
-    # at https://docs.qtile.org/en/latest/manual/config/lazy.html
-    # Switch between windows
-    Key([mod], "h", lazy.layout.left(), desc="Move focus to left"),
-    Key([mod], "l", lazy.layout.right(), desc="Move focus to right"),
+    # Key([mod], "h", lazy.layout.left(), desc="Move focus to left"),
+    # Key([mod], "l", lazy.layout.right(), desc="Move focus to right"),
+    Key([mod], "Return", lazy.layout.swap_left()),
+    Key([mod], "h", lazy.layout.shrink_main(), desc="Move focus to left"),
+    Key([mod], "l", lazy.layout.grow_main(), desc="Move focus to right"),
     Key([mod], "j", lazy.layout.down(), desc="Move focus down"),
     Key([mod], "k", lazy.layout.up(), desc="Move focus up"),
-    # Key([mod], "space", lazy.layout.next(), desc="Move window focus to other window"),
-    # Move windows between left/right columns or move up/down in current stack.
-    # Moving out of range in Columns layout will create new column.
+
     Key([mod, "shift"], "h", lazy.layout.shuffle_left(), desc="Move window to the left"),
     Key([mod, "shift"], "l", lazy.layout.shuffle_right(), desc="Move window to the right"),
     Key([mod, "shift"], "j", lazy.layout.shuffle_down(), desc="Move window down"),
     Key([mod, "shift"], "k", lazy.layout.shuffle_up(), desc="Move window up"),
-    # Grow windows. If current window is on the edge of screen and direction
-    # will be to screen edge - window would shrink.
-    KeyChord([mod], "r", [
-        Key([], "h", lazy.layout.grow_left()),
-        Key([], "l", lazy.layout.grow_right()),
-        Key([], "j", lazy.layout.grow_down()),
-        Key([], "k", lazy.layout.grow_up()),
-        Key([], "r", lazy.ungrab_chord()()),
-        Key([mod], "r", lazy.ungrab_chord()()),
-        Key([mod], "h", lazy.layout.grow_left()),
-        Key([mod], "l", lazy.layout.grow_right()),
-        Key([mod], "j", lazy.layout.grow_down()),
-        Key([mod], "k", lazy.layout.grow_up())],
-        mode = "Resize"),
 
-    KeyChord([mod], "w", [
-        Key([], "h", lazy.layout.shuffle_left()),
-        Key([], "l", lazy.layout.shuffle_right()),
-        Key([], "j", lazy.layout.shuffle_down()),
-        Key([], "k", lazy.layout.shuffle_up()),
-        Key([], "w", lazy.ungrab_chord()()),
-        Key([mod], "w", lazy.ungrab_chord()()),
-        Key([mod], "h", lazy.layout.shuffle_left()),
-        Key([mod], "l", lazy.layout.shuffle_right()),
-        Key([mod], "j", lazy.layout.shuffle_down()),
-        Key([mod], "k", lazy.layout.shuffle_up()),
-        Key([mod], "w", lazy.ungrab_chord()())],
-        mode = "Move windows"),
+    # KeyChord([mod], "r", [
+    #     Key([], "h", lazy.layout.grow_left()),
+    #     Key([], "l", lazy.layout.grow_right()),
+    #     Key([], "j", lazy.layout.grow_down()),
+    #     Key([], "k", lazy.layout.grow_up()),
+    #     Key([], "r", lazy.ungrab_chord()()),
+    #     Key([mod], "r", lazy.ungrab_chord()()),
+    #     Key([mod], "h", lazy.layout.grow_left()),
+    #     Key([mod], "l", lazy.layout.grow_right()),
+    #     Key([mod], "j", lazy.layout.grow_down()),
+    #     Key([mod], "k", lazy.layout.grow_up())],
+    #     mode = "Resize"),
+    #
+    # KeyChord([mod], "w", [
+    #     Key([], "h", lazy.layout.shuffle_left()),
+    #     Key([], "l", lazy.layout.shuffle_right()),
+    #     Key([], "j", lazy.layout.shuffle_down()),
+    #     Key([], "k", lazy.layout.shuffle_up()),
+    #     Key([], "w", lazy.ungrab_chord()()),
+    #     Key([mod], "w", lazy.ungrab_chord()()),
+    #     Key([mod], "h", lazy.layout.shuffle_left()),
+    #     Key([mod], "l", lazy.layout.shuffle_right()),
+    #     Key([mod], "j", lazy.layout.shuffle_down()),
+    #     Key([mod], "k", lazy.layout.shuffle_up()),
+    #     Key([mod], "w", lazy.ungrab_chord()())],
+    #     mode = "Move windows"),
 
-    Key(
-        [mod, "shift"], "Return", lazy.layout.toggle_split(),
-        desc="Toggle between split and unsplit sides of stack"),
-    Key([mod], "Return", lazy.spawn("alacritty"), desc="Launch terminal"),
-
+    Key([mod, "shift"], "Return", lazy.spawn("alacritty"), desc="Launch terminal"),
+    Key([mod, "shift"], "q", lazy.spawn("shutdown -h now"), desc="Launch terminal"),
     Key([mod], "Tab", lazy.next_layout(), desc="Toggle between layouts"),
     Key([mod], "q", lazy.window.kill(), desc="Kill focused window"),
     Key([mod, "shift"], "r", lazy.reload_config(), desc="Reload the config"),
     Key([mod, "shift"], "e", lazy.shutdown(), desc="Shutdown Qtile"),
+    Key([mod], "f", lazy.window.toggle_floating(), desc="from/to floating"),
 
     Key(['mod4'], 'p', lazy.run_extension(extension.DmenuRun(
         dmenu_bottom = True,
-        dmenu_font="JetBrainsMonoMedium Nerd Font-12",
-        background="#282A2E",
-        foreground="#f0f3f4",
+        dmenu_font="JetBrainsMonoMedium Nerd Font-13",
+        background="#282c34",
+        foreground="#fcfcfc",
         selected_background="#5c6667",
-        selected_foreground="#f0f3f4",
+        selected_foreground="#fcfcfc",
         dmenu_ignorecase = True,
         dmenu_prompt = "dmenu",
     ))),
-    Key([],"XF86AudioRaiseVolume", lazy.spawn("pactl set-sink-volume @DEFAULT_SINK@ +5%"), desc="Volume"),
-    Key([],"XF86AudioLowerVolume", lazy.spawn("pactl set-sink-volume @DEFAULT_SINK@ -5%"), desc="Volume"),
-    Key([],"XF86AudioMute", lazy.spawn("pactl set-sink-mute @DEFAULT_SINK@ toggle"), desc="Volume"),
-    Key([],"XF86AudioMicMute", lazy.spawn("pactl set-sink-mute @DEFAULT_SINK@ toggle"), desc="Volume"),
-    Key([],"XF86MonBrightnessUp", lazy.spawn("brightnessctl set +5%"), desc="Brightness"),
-    Key([],"XF86MonBrightnessDown", lazy.spawn("brightnessctl set 5-%"), desc="Brightness"),
+    # Key([],"XF86AudioRaiseVolume", lazy.spawn("pactl set-sink-volume @DEFAULT_SINK@ +5%"), desc="Volume"),
+    # Key([],"XF86AudioLowerVolume", lazy.spawn("pactl set-sink-volume @DEFAULT_SINK@ -5%"), desc="Volume"),
+    # Key([],"XF86AudioMute", lazy.spawn("pactl set-sink-mute @DEFAULT_SINK@ toggle"), desc="Volume"),
+    # Key([],"XF86AudioMicMute", lazy.spawn("pactl set-sink-mute @DEFAULT_SINK@ toggle"), desc="Volume"),
+    Key([],"XF86AudioRaiseVolume", lazy.spawn("amixer set Master 5%+"), desc="Volume"),
+    Key([],"XF86AudioLowerVolume", lazy.spawn("amixer set Master 5%-"), desc="Volume"),
+    Key([],"XF86AudioMute", lazy.spawn("amixer set Master toggle"), desc="Volume"),
+    Key([],"XF86AudioMicMute", lazy.spawn("amixer set Master toggle"), desc="Volume"),
+    Key([],"XF86MonBrightnessUp", lazy.spawn("xbacklight -inc 5"), desc="Brightness"),
+    Key([],"XF86MonBrightnessDown", lazy.spawn("xbacklight -dec 5"), desc="Brightness"),
 ]
 
 groups = [Group(i) for i in "123456789"]
@@ -140,19 +114,8 @@ for i in groups:
     )
 
 layouts = [
-    layout.Columns(margin = 20, border_focus = "#f0f3f4", border_normal = "#282c34", border_width=5),
-    layout.Tile(margin = 5, shift_windows=True, border_on_single = False,border_focus = "#f0f3f4", border_normal = "#282A2E", border_width=5),
+    layout.MonadTall(margin = 10, border_focus = "#fcfcfc", border_normal = "#282c34", border_width = 3, cange_ratio = 0.05, max_ratio = 0.9, min_ratio  = 0.1, single_border_width = 0, single_margin = 0),
     layout.Max(),
-    # layout.Slice(),
-    # layout.Stack(num_stacks=2),
-    # layout.Bsp(),
-    # layout.Matrix(),
-    # layout.MonadTall(border_width=10),
-    # layout.MonadWide(),
-    # layout.RatioTile(),
-    # layout.TreeTab(),
-    # layout.VerticalTile(),
-    # layout.Zoomy(),
 ]
 
 widget_defaults = dict(
@@ -164,9 +127,9 @@ extension_defaults = widget_defaults.copy()
 
 screens = [
     Screen(
-        wallpaper = '/home/nikita/.local/share/backgrounds/wave-dark-arch.png',
-        wallpaper_mode = 'fill',
-        top = bar.Gap(44),
+        # wallpaper = '/home/nikita/.local/share/backgrounds/wave-dark-arch.png',
+        # wallpaper_mode = 'fill',
+        top = bar.Gap(34),
         # top=bar.Bar(
         #     [
         #         widget.CurrentLayout(),
@@ -209,7 +172,8 @@ floating_layout = layout.Floating(
         Match(wm_class="ssh-askpass"),  # ssh-askpass
         Match(title="branchdialog"),  # gitk
         Match(title="pinentry"),  # GPG key password entry
-    ]
+    ],
+    border_width = 0
 )
 auto_fullscreen = True
 focus_on_window_activation = "smart"
