@@ -2,7 +2,7 @@
 font:
   normal:
     family: "JetBrainsMono Nerd Font"
-    style: Bold
+    style: Medium
   bold:
     family: "JetBrainsMono Nerd Font"
     style: Bold
