@@ -1,23 +1,22 @@
 from libqtile import bar, layout , widget
 from libqtile.config import Click, Drag, Group, Key, Match, Screen
 from libqtile.lazy import lazy
-from libqtile.widget.battery import Battery, BatteryState
-#from libqtile.utils import guess_terminal
+from libqtile.widget.battery import Battery, BatteryState, BatteryStatus
 
 import os
 import subprocess
 
 from libqtile import hook
 
-
+# Autostart script
 @hook.subscribe.startup_once
 def autostart():
     home = os.path.expanduser('~/.config/qtile/autostart.sh')
     subprocess.run([home])
 
-
-class MyBattery(Battery):
-    def build_string(self, status):
+# Custom battery icon widget
+class BatteryIcon(Battery):
+    def build_string(self, status: BatteryStatus) -> str:
         if status.state == BatteryState.DISCHARGING:
             if status.percent > 0.75:
                 char = ''
@@ -32,15 +31,21 @@ class MyBattery(Battery):
             char = ''
         else:
             char = ''
-        return self.format.format(char=char, percent=status.percent)
-battery = MyBattery(
-    format='{char}',
-    low_foreground="#282c34",
-    show_short_text=False,
-    low_percentage=0.12,
-    foreground="#fcfcfc",
-    notify_below=12,
-)
+        return self.format.format(char=char)
+
+class VolumeIcon(widget.Volume):
+    def _update_drawer(self):
+        if self.volume == -1:
+            self.text = "婢"
+            self.padding = 12
+        elif self.volume <= 10:
+            self.text = "奄"
+        elif self.volume <= 40:
+            self.text = "奔"
+        elif self.volume > 40:
+            self.text = "墳"
+        else:
+            self.text = "{}".format(self.volume)
 
 mod = "mod4"
 terminal = "alacritty"
@@ -54,7 +59,8 @@ keys = [
 
     Key([mod], "j", lazy.layout.down(), desc="Move focus down"),
     Key([mod], "k", lazy.layout.up(), desc="Move focus up"),
-    Key([mod, "shift"], "j", lazy.layout.shuffle_down(), desc="Move window down"),
+    Key([mod, "shift"], "j", lazy.layout.shuffle_down(),
+        desc="Move window down"),
     Key([mod, "shift"], "k", lazy.layout.shuffle_up(), desc="Move window up"),
 
     Key([mod, "shift"], "Return", lazy.spawn(terminal), desc="Launch terminal"),
@@ -62,16 +68,24 @@ keys = [
     Key([mod], "q", lazy.window.kill(), desc="Kill focused window"),
     Key([mod, "shift"], "r", lazy.reload_config(), desc="Reload the config"),
     Key([mod, "shift"], "e", lazy.shutdown(), desc="Shutdown Qtile"),
-    Key([mod], "p", lazy.spawn("dmenu_run -nf '#fcfcfc' -nb '#282c34' -sb '#646870' -sf '#fcfcfc' -fn 'JetBrainsMonoMedium Nerd Font-13'"), desc="dmenu"),
+    Key([mod], "p", 
+        lazy.spawn("""dmenu_run -nf '#fcfcfc' -nb '#282c34' -sb '#646870'
+                   -sf '#fcfcfc' -fn 'JetBrainsMonoMedium Nerd Font-13'"""),
+        desc="dmenu"),
     Key([mod, "shift"], "q", lazy.spawn("shutdown -h now"), desc="poweroff"),
     Key([mod], "f", lazy.window.toggle_floating(), desc="from/to floating"),
 
     Key([],"XF86AudioRaiseVolume", lazy.spawn("pamixer -i 5"), desc="Volume"),
-    Key([],"XF86AudioLowerVolume", lazy.spawn("pamixer -d 5"), desc="Volume"),
+    Key([],"XF86AudioLowerVolume", lazy.spawn("pamixer -d 5"),
+        desc="Volume"),
     Key([],"XF86AudioMute", lazy.spawn("pamixer -t"), desc="Volume"),
     # Key([],"XF86AudioMicMute", lazy.spawn("pamixer -t"), desc="Volume"),
-    Key([],"XF86MonBrightnessUp", lazy.spawn("xbacklight -inc 5"), desc="Brightness"),
-    Key([],"XF86MonBrightnessDown", lazy.spawn("xbacklight -dec 5"), desc="Brightness"),
+    Key([],"XF86MonBrightnessUp", lazy.spawn("xbacklight -inc 5"),
+        desc="Brightness"),
+    Key([],"XF86MonBrightnessDown", lazy.spawn("xbacklight -dec 5"),
+        desc="Brightness"),
+    Key([mod], "space", lazy.widget["keyboardlayout"].next_keyboard(),
+        desc="Next keyboard layout."),
 ]
 
 groups = [Group(i) for i in "123456789"]
@@ -99,34 +113,63 @@ for i in groups:
     )
 
 layouts = [
-    layout.MonadTall(margin = 10, border_focus = "#fcfcfc", border_normal = "#282c34", border_width = 3, cange_ratio = 0.05, max_ratio = 0.9, min_ratio  = 0.1, single_border_width = 0, single_margin = 0),
+    layout.MonadTall(margin = 10, border_focus = "#fcfcfc", 
+                     border_normal = "#282c34", border_width = 3, 
+                     cange_ratio = 0.05, max_ratio = 0.9, min_ratio  = 0.1, 
+                     single_border_width = 0, single_margin = 0),
     layout.Max(),
 ]
 
-widget_defaults = dict(
-    font="JetBrainsMonoMedium Nerd Font",
-    fontsize=16,
-    padding=5,
-)
+widget_defaults = dict(font="JetBrainsMonoMedium Nerd Font", fontsize = 17,
+                       padding=0)
 extension_defaults = widget_defaults.copy()
 
 screens = [
     Screen(
-        top = bar.Gap(40),
-        # top=bar.Bar(
-        #     [
-        #         widget.GroupBox(),
-        #         widget.WindowName(),
-        #         widget.Battery(format='[ BAT {percent:2.0%} ]'),
-        #         # widget.Wlan(interface='wlo1',format="[ NET {essid} ]" ),
-        #         widget.PulseVolume(format="[ NET {essid} ]" ),
-        #         widget.Clock(format="[ %H:%M:%S ]"),
-        #         # widget.QuickExit(),
-        #     ],
-        #     35,
-        #     # border_width=[2, 0, 2, 0],  # Draw top and bottom borders
-        #     # border_color=["ff00ff", "000000", "ff00ff", "000000"]  # Borders are magenta
-        # ),
+        # top = bar.Gap(30),
+        top = bar.Bar(
+            [
+                widget.GroupBox(highlight_method = "block",
+                                margin = 0,
+                                padding = 8,
+                                margin_y = 3,
+                                rounded = False,
+                                block_highlight_text_color = "#fcfcfc",
+                                this_current_screen_border = "#646870"),
+
+                widget.Sep(linewidth = 10, foreground = "#282c34"),
+                widget.WindowName(),
+
+                widget.TextBox(text = "", fontsize = 26, padding = 12),
+                widget.KeyboardLayout(configured_keyboards=['us', 'ru']),
+                widget.Sep(linewidth = 17, foreground = "#282c34"),
+
+                # VolumeIcon(fontsize = 30, padding = 8, update_interval = 1),
+                widget.TextBox(text = "奔", fontsize = 30, padding = 8),
+                widget.Volume(update_interval = 0.5),
+                widget.Sep(linewidth = 7, foreground = "#282c34"),
+
+                BatteryIcon(format = '{char}', padding = 18, fontsize = 18),
+                widget.Battery(format="{percent:2.0%}"),
+                widget.Sep(linewidth = 15, foreground = "#282c34"),
+
+                widget.TextBox(text = "", fontsize = 21, padding = 10),
+                widget.Memory(update_interval = 2, format = "{MemUsed:.0f}{mm}"),
+                widget.Sep(linewidth = 11, foreground = "#282c34"),
+
+                widget.TextBox(text = "", fontsize = 21, padding = 14),
+                widget.Wlan(update_interval = 5, interface="wlo1", format = "{essid}"),
+                widget.Sep(linewidth = 13, foreground = "#282c34"),
+
+                widget.TextBox(text = "", fontsize = 22, padding = 12),
+                widget.Clock(update_interval = 60, format="%H:%M"),
+                widget.Sep(linewidth = 10, foreground = "#282c34"),
+            ],
+            30,
+            background="#282c34"
+            # border_width=[2, 0, 2, 0],  # Draw top and bottom borders
+            # border_color=["ff00ff", "000000", "ff00ff", "000000"]  # Borders are magenta
+        ),
     ),
 ]
 
