@@ -12,6 +12,7 @@ echo "9) delete gnome packages"
 echo "10) install themes and icons"
 echo "11) install JetBrainsMono Nerd Font"
 echo "12) install OhMyZsh"
+echo "13) copy config files from this path"
 printf "\nchoose: "
 read numbers
 
@@ -34,7 +35,9 @@ for number in $numbers; do
    fi
 
    if [[ $number = 4 ]]; then
-    sudo pacman -S flameshot feh lxsession-gtk3 xorg-xbacklight qt5ct alacritty dmenu lxappearance picom gpicview samba --needed
+    sudo pacman -S xorg lightdm lightdm-slick greeter flameshot feh lxsession-gtk3 xorg-xbacklight qt5ct alacritty dmenu lxappearance picom gpicview samba --needed
+    sudo systemctl enable lightdm
+    cd && git clone https://aur.archlinux.org/lightdm-settings.git && cd lightdm-settings && makepkg -sric && cd && rm -rf lightdm-settings
    fi
 
    if [[ $number = 5 ]]; then
@@ -71,6 +74,19 @@ for number in $numbers; do
 
    if [[ $number = 12 ]]; then
     sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" && git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting && git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k && git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+     cp zshrc ~/.zshrc
+   fi
+
+   if [[ $number = 13 ]]; then
+     sudo cp [0-9]*.conf /etc/X11/xorg.conf.d/
+     mkdir -p ~/.config/alacritty/ && cp alacritty.yml ~/.config/alacritty/
+     sudo cp *.jpg /usr/share/pixmaps/
+     mkdir ~/pictures && cp *.jpg ~/pictures
+     cp bashrc ~/.bashrc
+     cp xinitrc ~/.xinitrc
+     cp xprofile ~/.xprofile
+     mkdir -p ~/.local/bin/ && cp backup ~/.local/bin
+     mkdir -p ~/.config/picom/ && cp picom.conf ~/.config/picom/
    fi
 done
 
