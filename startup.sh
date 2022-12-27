@@ -26,6 +26,11 @@ for number in $numbers; do
 
    if [[ $number = 3 ]]; then
     sudo pacman -S lldb clang gdb bash-language-server --needed
+    mkdir -p ~/.local/share/nvim/lsp/lua
+    mkdir -p ~/.local/share/nvim/dap/cpptools
+    cd ~/.local/share/nvim/dap/ && wget https://github.com/microsoft/vscode-cpptools/releases/download/v1.13.8/cpptools-linux.vsix && unzip -d cpptools cpptools-linux.vsix && rm cpptools-linux.vsix
+    cd ../lsp && wget https://github.com/sumneko/lua-language-server/releases/download/3.6.4/lua-language-server-3.6.4-linux-x64.tar.gz && tar -xzvf lua-language-server-3.6.4-linux-x64.tar.gz -C lua && rm lua-language-server-3.6.4-linux-x64.tar.gz
+
    fi
 
    if [[ $number = 4 ]]; then
