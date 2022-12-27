@@ -1,6 +1,4 @@
 #!/bin/bash
+export VISUAL=/usr/bin/nvim
 export PATH=$PATH:/home/nikita/.local/bin
 export QT_QPA_PLATFORMTHEME=qt5ct
-feh --bg-fill ~/Pictures/neboskreb.jpg
-picom -b
-lxpolkit &

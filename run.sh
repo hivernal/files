@@ -1,10 +1,10 @@
 #!/bin/bash
 
 memory="-m 1G"
-net="-nic user,mac=52:54:00:12:34:56 -nic bridge,helper=/usr/lib/qemu/qemu-bridge-helper,mac=52:54:00:12:34:57"
+net="-nic user,smb=/home/nikita,mac=52:54:00:12:34:56 -nic bridge,helper=/usr/lib/qemu/qemu-bridge-helper,mac=52:54:00:12:34:57"
 vga="-vga qxl"
 display="-display spice-app,gl=on -device virtio-serial -chardev spicevmc,id=vdagent,debug=0,name=vdagent -device virtserialport,chardev=vdagent,name=com.redhat.spice.0"
-disk="astra.qcow2"
+disk="astra4.qcow2"
 
 while [[ -n $1 ]]; do
   case $1 in

@@ -54,11 +54,9 @@ fi
 # xterm -geometry 80x20+494-0 &
 # exec xterm -geometry 80x66+0+0 -name login
 
-PATH=$PATH:/home/nikita/.local/bin
+export VISUAL=/usr/bin/nvim
+export PATH=$PATH:/home/nikita/.local/bin
 export QT_QPA_PLATFORMTHEME=qt5ct
-feh --bg-fill ~/Pictures/neboskreb.jpb
-picom -b
-lxpolkit &
 session=${1:-dwm}
 case $session in
     dwm               ) exec dwm;;
