@@ -35,9 +35,17 @@ for number in $numbers; do
    fi
 
    if [[ $number = 4 ]]; then
-    sudo pacman -S xorg lightdm lightdm-slick greeter flameshot feh lxsession-gtk3 xorg-xbacklight qt5ct alacritty dmenu lxappearance picom gpicview samba --needed
+    sudo pacman -S xdg-user-dir xorg lightdm lightdm-slick greeter flameshot feh lxsession-gtk3 xorg-xbacklight qt5ct alacritty dmenu lxappearance picom gpicview samba --needed
     sudo systemctl enable lightdm
     cd && git clone https://aur.archlinux.org/lightdm-settings.git && cd lightdm-settings && makepkg -sric && cd && rm -rf lightdm-settings
+    echo 'XDG_DESKTOP_DIR="$HOME/desktop"
+XDG_DOWNLOAD_DIR="$HOME/downloads"
+XDG_TEMPLATES_DIR="$HOME/templates"
+XDG_DOCUMENTS_DIR="$HOME/documents"
+XDG_MUSIC_DIR="$HOME/music"
+XDG_PICTURES_DIR="$HOME/pictures"
+XDG_VIDEOS_DIR="$HOME/videos"
+XDG_PUBLICSHARE_DIR="$HOME/"' > ~/.config/user-dirs.dirs
    fi
 
    if [[ $number = 5 ]]; then
