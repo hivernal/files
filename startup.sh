@@ -22,7 +22,7 @@ for number in $numbers; do
   fi
 
   if [[ $number = 2 ]]; then
-    sudo pacman -S firefox firefox-i18n-ru firefox-i18n-en-us firefox-spell-ru telegram-desktop gcc nodejs neovim npm python-pip jre-openjdk-headless jre-openjdk jdk-openjdk openjdk-src libreoffice-still libreoffice-still-ru hunspell hunspell-ru hunspell-en_us thunderbird thunderbird-i18n-ru thunderbird-i18n-en-us vlc rsync git gtk-engine-murrine sassc transmission-gtk gparted cmake lsd unzip wget xreader unrar curl bash-completion python-pynvim bash-completion --needed
+    sudo pacman -S xclip make fakeroot firefox firefox-i18n-ru firefox-i18n-en-us firefox-spell-ru telegram-desktop gcc nodejs neovim npm python-pip jre-openjdk-headless jre-openjdk jdk-openjdk openjdk-src libreoffice-still libreoffice-still-ru hunspell hunspell-ru hunspell-en_us thunderbird thunderbird-i18n-ru thunderbird-i18n-en-us vlc rsync git gtk-engine-murrine sassc transmission-gtk gparted cmake lsd unzip wget xreader unrar curl bash-completion python-pynvim bash-completion --needed
   fi
 
    if [[ $number = 3 ]]; then
@@ -35,9 +35,9 @@ for number in $numbers; do
    fi
 
    if [[ $number = 4 ]]; then
-    sudo pacman -S xdg-user-dir xorg lightdm lightdm-slick greeter flameshot feh lxsession-gtk3 xorg-xbacklight qt5ct alacritty dmenu lxappearance picom gpicview samba --needed
+    sudo pacman -S xdg-user-dirs lightdm lightdm-gtk-greeter xcb-util-cursor flameshot feh lxsession-gtk3 xorg-xbacklight qt5ct alacritty dmenu lxappearance picom gpicview samba --needed
     sudo systemctl enable lightdm
-    cd && git clone https://aur.archlinux.org/lightdm-settings.git && cd lightdm-settings && makepkg -sric && cd && rm -rf lightdm-settings
+    cd ~ && git clone https://aur.archlinux.org/lightdm-settings.git && cd lightdm-settings && makepkg -sric && cd ~ && rm -rf lightdm-settings
     echo 'XDG_DESKTOP_DIR="$HOME/desktop"
 XDG_DOWNLOAD_DIR="$HOME/downloads"
 XDG_TEMPLATES_DIR="$HOME/templates"
